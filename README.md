@@ -12,7 +12,7 @@
 
 ***Unique hardware dashboard for Raspberry Pi 4 and Raspberry Pi 5 with 3D model for Argon Neo 5 enclosure*** 
 
-***This repository is part of the [Web3Pi](https://www.web3pi.io) initiative, which enables the automated deployment of a full Ethereum node on a Raspberry Pi.***
+***This repository is part of the [Web3 Pi](https://www.web3pi.io) initiative, which enables the automated deployment of a full Ethereum node on a Raspberry Pi.***
 
 This project allows you to install a color LCD display in the Argon Neo 5 case and display the following system parameters:
 
