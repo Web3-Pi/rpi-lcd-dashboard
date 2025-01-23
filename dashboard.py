@@ -16,6 +16,9 @@ SHOW_PER_CORE = False
 # False = [0 - 100%]
 # True  = [0 - 400%]
 
+W = 280
+H = 240
+
 # Raspberry Pi LCD pin configuration:
 RST = 27
 DC = 25
@@ -24,12 +27,12 @@ bus = 0
 disp = None
 
 # Text colors
-C_BG = '#00129A' #LCD bacground
+C_BG = '#00129A' #LCD background
 C_T1 = '#FFFFFF' #main text
 C_T2 = '#c9c9c9' #text on top
 C_T3 = '#c9c9c9' #text on bottom
 C_W3P = ['#d5c1ee', '#e0cce4', '#c2f0ba', '#bfc7c0', '#c2cbe6', '#d5c2b7', '#b4ffe1', '#ced0e7', '#e2c9c1', '#cee8f8',
-     '#e4d9d9', '#dccfc3', '#dee7f3', '#e4e9e1', '#b9c6dc', '#bdb8e3'] #colors for Web3Pi.io text
+     '#e4d9d9', '#dccfc3', '#dee7f3', '#e4e9e1', '#b9c6dc', '#bdb8e3'] #colors for text
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -88,13 +91,12 @@ def main():
     Font4 = ImageFont.truetype("./font/JetBrainsMono-Medium.ttf", 15)
 
     # Create start image for drawing.
-    image1 = Image.open('./img/splashScreen.png')
-    draw = ImageDraw.Draw(image1)
-
+    image1 = Image.open('./img/splashscreen2_l.png')
     image1 = image1.rotate(0)
+    draw = ImageDraw.Draw(image1)
     disp.ShowImage(image1)
 
-    splash_time = 5
+    splash_time = 4
     time.sleep(splash_time - 1) # how long to show splash image (Web3Pi logo)
 
     get_ip_address()
@@ -131,22 +133,23 @@ def main():
                     low_frequency_tasks()
 
                 # Draw background
-                image1 = Image.open('./img/lcdbg1.png')
+                image1 = Image.open('./img/lcdbg1_l.png')
+                #image1 = image1.rotate(90)
                 draw = ImageDraw.Draw(image1)
 
                 # Draw vertical lines
-                draw.line([(240 / 3, 0), (240 / 3, (280 / 3) * 2)], fill="BLACK", width=2, joint=None)
-                draw.line([((240 / 3) * 2, 0), ((240 / 3) * 2, (280 / 3) * 2  -22)], fill="BLACK", width=2, joint=None)
+                draw.line([(W / 3, 0), (W / 3, (H / 3) * 2  + 12)], fill="TEAL", width=2, joint=None)
+                draw.line([((W / 3) * 2, 0), ((W / 3) * 2, (H / 3) * 2  -12)], fill="TEAL", width=2, joint=None)
 
                 # Draw horizontal lines
-                draw.line([(0, 280 / 3), (240, 280 / 3)], fill="BLACK", width=2, joint=None)
-                draw.line([(0, (280 / 3) * 2), (240, (280 / 3) * 2)], fill="BLACK", width=2, joint=None)
-                draw.line([((240 / 3), (280 / 3) * 2 - 22), (240, (280 / 3) * 2 - 22)], fill="BLACK", width=2, joint=None)
+                draw.line([(0, H / 3 + 5), (W, H / 3  + 5)], fill="TEAL", width=2, joint=None)
+                draw.line([(0, (H / 3) * 2 + 10), (W, (H / 3) * 2 + 10)], fill="TEAL", width=2, joint=None)
+                draw.line([((W / 3), (H / 3) * 2 - 12), (W, (H / 3) * 2 - 12)], fill="TEAL", width=2, joint=None)
 
                 # CPU
-                x = 0
-                y = 0
-                draw.text((118 + x, 108 + y), 'CPU', fill=C_T2, font=Font2, anchor="mm")
+                x = 0 + 20
+                y = -10
+                draw.text((120 + x, 108 + y), 'CPU', fill=C_T2, font=Font2, anchor="mm")
                 if SHOW_PER_CORE:
                     draw.text((120 + x, 140 + y), f'{int(cpu_percent)}', fill=f'{value_to_hex_color_cpu_usage_400(int(cpu_percent))}', font=Font1, anchor="mm")
                 else:
@@ -154,30 +157,30 @@ def main():
                     draw.text((150 + x, 145 + y), '%', fill=C_T2, font=Font3, anchor="mm")
 
                 # RAM
-                x = 80
-                y = -90
+                x = 80 + 30
+                y = -95
                 draw.text((120 + x, 108 + y), 'RAM', fill=C_T2, font=Font2, anchor="mm")
                 draw.text((120 + x, 140 + y), f'{int(mem.percent)}', fill=C_T1, font=Font1, anchor="mm")
-                draw.text((145 + x, 170 + y), '%', fill=C_T2, font=Font2, anchor="mm")
+                draw.text((155 + x, 166 + y), '%', fill=C_T2, font=Font2, anchor="mm")
 
                 # DISK
-                x = -80
-                y = 0
+                x = -80 + 5
+                y = -9
                 draw.text((120 + x, 108 + y), 'DISK', fill=C_T2, font=Font2, anchor="mm")
                 draw.text((120 + x, 140 + y), f'{int(disk.percent)}%', fill=C_T1, font=Font1, anchor="mm")
-                draw.text((122 + x, 170 + y), f'{disk_free_gb:.1f}GB', fill=C_T2, font=Font3, anchor="mm")
+                draw.text((122 + x, 166 + y), f'{disk_free_gb:.1f}GB', fill=C_T2, font=Font3, anchor="mm")
 
                 # CPU TEMP
-                x = 0
-                y = -90
+                x = 0 + 20
+                y = -95
                 draw.text((120 + x, 108 + y), 'TEMP', fill=C_T2, font=Font2, anchor="mm")
                 ct = int(cpu_temp)
                 draw.text((120 + x, 140 + y), f'{ct}', fill=C_T1, font=Font1, anchor="mm")
-                draw.text((145 + x, 170 + y), '°C', fill=C_T2, font=Font2, anchor="mm")
+                draw.text((149 + x, 166 + y), '°C', fill=C_T2, font=Font2, anchor="mm")
 
                 # Network
-                x = -80
-                y = -90
+                x = -80 + 5
+                y = -95
                 draw.text((120 + x, 108 + y), net_interface, fill=C_T2, font=Font2, anchor="mm")
                 global net_u, net_d
                 if net_d >= 100:
@@ -190,25 +193,25 @@ def main():
                 else:
                     draw.text((85 + x, 155 + y), f"U:{net_u:.1f}", fill=C_T1, font=Font3, anchor="lm")
 
-                draw.text((135 + x, 176 + y), 'Mbps', fill=C_T2, font=Font3, anchor="mm")
+                draw.text((145 + x, 173 + y), 'Mbps', fill=C_T2, font=Font4, anchor="mm")
 
                 # SWAP
-                x = 80
-                y = 0
-                draw.text((115 + x, 108 + y), 'SWAP', fill=C_T2, font=Font2, anchor="mm")
+                x = 80 + 30
+                y = -10
+                draw.text((125 + x, 108 + y), 'SWAP', fill=C_T2, font=Font2, anchor="mm")
                 draw.text((120 + x, 140 + y), f'{int(swap.percent)}', fill=C_T1, font=Font1, anchor="mm")
-                draw.text((153 + x, 145 + y), '%', fill=C_T2, font=Font2, anchor="mm")
+                draw.text((155 + x, 145 + y), '%', fill=C_T2, font=Font2, anchor="mm")
                 #draw.text((153 + x, 110 + y), '%', fill=C_T2, font=Font2, anchor="mm")
 
                 # Local IP / HostName
-                x = 40
-                y = 95
-                draw.text((120, 108 + y), 'IP / HOSTNAME', fill=C_T2, font=Font2, anchor="mm")
-                draw.text((120, 170 + y - 35), f'{ip_local_address}', fill=C_T1, font=Font3, anchor="mm")
-                draw.text((120, 170 + y - 10), f'{hostname}.local', fill=C_T1, font=Font3, anchor="mm")
+                x = 120
+                y = 57
+                #draw.text((120, 108 + y), 'IP / HOSTNAME', fill=C_T2, font=Font2, anchor="mm")
+                draw.text((140, 170 + y - 35), f'{ip_local_address}', fill=C_T1, font=Font2, anchor="mm")
+                draw.text((140, 170 + y - 10), f'{hostname}.local', fill=C_T1, font=Font2, anchor="mm")
 
                 # Web3Pi.io text
-                draw.text((165, 80 + y), 'Web3Pi.io', fill=C_W3P[C_W3P_index], font=Font3, anchor="mm")
+                draw.text((185, 159), 'Web3Pi.io', fill=C_W3P[C_W3P_index], font=Font3, anchor="mm")
                 if(C_W3P_index < len(C_W3P) - 1):
                     C_W3P_index += 1
                 else:
