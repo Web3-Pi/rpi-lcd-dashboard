@@ -138,7 +138,7 @@ def main():
                 draw = ImageDraw.Draw(image1)
 
                 # Draw vertical lines
-                draw.line([(W / 3, 0), (W / 3, (H / 3) * 2  + 12)], fill="TEAL", width=2, joint=None)
+                draw.line([(W / 3, 0), (W / 3, (H / 3) * 2  + 10)], fill="TEAL", width=2, joint=None)
                 draw.line([((W / 3) * 2, 0), ((W / 3) * 2, (H / 3) * 2  -12)], fill="TEAL", width=2, joint=None)
 
                 # Draw horizontal lines
