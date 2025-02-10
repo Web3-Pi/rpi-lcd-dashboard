@@ -7,9 +7,17 @@ import logging
 import threading
 import netifaces
 import signal
+import smbus
 from lcd import LCD_1inch69
 from collections import deque
 from PIL import Image, ImageDraw, ImageFont
+
+#I2C for fan control
+FAN_Speed = 0b111111
+FAN_Direction = 0b10
+FAN_Bytes = (FAN_Speed << 2) | FAN_Direction
+FAN_Reg = 0
+FAN_Address = 0x65
 
 # Choose how to display CPU usage percentages
 SHOW_PER_CORE = False
@@ -72,7 +80,11 @@ def main():
 
     global hostname
     hostname = get_hostname()
-
+     
+    #Init I2C bus for FAN
+    global FAN_Bus
+    FAN_Bus = smbus.SMBus(1)
+     
     # display with hardware SPI:
     global disp
     disp = LCD_1inch69.LCD_1inch69()
@@ -313,6 +325,9 @@ def high_frequency_tasks():
 
     cpu_temp = get_cpu_temperature()
     #logging.info(f'CPU_TEMP= {getCpuTemperature()} °C')
+
+    #Set fan speed
+    FAN_Bus.write_byte_data(FAN_Address, FAN_Reg, FAN_Bytes)
 
 def medium_frequency_tasks():
     logging.debug("medium_frequency_tasks()")
