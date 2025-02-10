@@ -5,3 +5,4 @@ numpy
 spidev
 gpiozero
 netifaces
+smbus
