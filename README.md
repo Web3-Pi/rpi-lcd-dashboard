@@ -49,7 +49,7 @@ Raspberry Pi is a trademark of Raspberry Pi Ltd. The use of this trademark here 
 Connect the display to the Raspberry Pi according to the diagram below.  
 The colors of the cables may vary depending on the supplier and batch. Focus on the function and pin number, not the color.
 
-![Rpi_LCD_diagram.png](docs/img/Rpi_LCD_diagram.png)
+![Rpi_LCD_diagram.png](docs/img/Rpi_LCD_diagram.png)   
 Diagram is valid for Raspberry Pi 4 and Pi 5
 
 If on Raspberry Pi 5 your LCD backlight is flickering connect `BL` to `3.3V PIN 17`
