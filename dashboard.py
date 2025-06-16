@@ -70,6 +70,11 @@ def main():
     global hostname
     hostname = get_hostname()
 
+    try:
+        net_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+    except Exception:
+        net_interface = "eth0"  # fallback
+
     # display with hardware SPI:
     global disp
     disp = LCD_1inch69.LCD_1inch69()
@@ -396,19 +401,17 @@ def get_ip_address():
     Returns:
         str: The local IP address or None if no IP address is found.
     """
-    interfaces = ['eth0', 'wlan0']
-    for interface in interfaces:
-        try:
-            addresses = netifaces.ifaddresses(interface)
-            ip_info = addresses.get(netifaces.AF_INET)
-            if ip_info:
-                ip_address = ip_info[0]['addr']
-                if ip_address and not ip_address.startswith("127."):
-                    global net_interface
-                    net_interface = interface
-                    return ip_address
-        except ValueError:
-            continue
+    global net_interface
+    try:
+        net_interface = netifaces.gateways()['default'][netifaces.AF_INET][1]
+        addresses = netifaces.ifaddresses(net_interface)
+        ip_info = addresses.get(netifaces.AF_INET)
+        if ip_info:
+            ip_address = ip_info[0]['addr']
+            if ip_address and not ip_address.startswith("127."):
+                return ip_address
+    except Exception:
+        pass
     return None
 
 def is_raspberry_pi():
