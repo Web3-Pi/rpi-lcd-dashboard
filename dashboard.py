@@ -107,7 +107,7 @@ def main():
     # Create the ul/dl thread and a deque of length 1 to hold the ul/dl- values
     global transfer_rate
     transfer_rate = deque(maxlen=1)
-    global net_interface
+
     t = threading.Thread(target=calc_ul_dl, args=(1,net_interface))
 
     # The program will exit if there are only daemonic threads left.
