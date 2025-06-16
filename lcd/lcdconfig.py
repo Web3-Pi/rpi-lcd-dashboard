@@ -34,8 +34,21 @@ import spidev
 import logging
 import numpy as np
 from gpiozero import DigitalOutputDevice, PWMOutputDevice, DigitalInputDevice
-from gpiozero.pins.lgpio import LGPIOFactory
-factory = LGPIOFactory()
+import gpiozero.pins.lgpio
+import lgpio
+
+# Patch the LGPIOFactory to use a specific chip
+# GPIO has moved to gpiochip0 but gpiozero uses gpiochip4.
+# This fix issuee is on kernel ~6.6.x+ and Rpi
+def __patched_init(self, chip=None):
+    gpiozero.pins.lgpio.LGPIOFactory.__bases__[0].__init__(self)
+    chip = 0
+    self._handle = lgpio.gpiochip_open(chip)
+    self._chip = chip
+    self.pin_class = gpiozero.pins.lgpio.LGPIOPin
+
+gpiozero.pins.lgpio.LGPIOFactory.__init__ = __patched_init
+factory = gpiozero.pins.lgpio.LGPIOFactory()
 
 
 class RaspberryPi:
