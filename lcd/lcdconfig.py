@@ -39,7 +39,7 @@ factory = LGPIOFactory(chip=0)
 
 
 class RaspberryPi:
-    def __init__(self, spi=spidev.SpiDev(10, 0), spi_freq=40000000, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None,
+    def __init__(self, spi=spidev.SpiDev(10, 0), spi_freq=10000000, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None,
                  i2c_freq=100000):
         self.np = np
         self.INPUT = False
@@ -78,7 +78,7 @@ class RaspberryPi:
         time.sleep(delaytime / 1000.0)
 
     def gpio_pwm(self, Pin):
-        return PWMOutputDevice(Pin, frequency=self.BL_freq, pin_factory=factory)
+        return DigitalOutputDevice(Pin)
 
     def spi_writebyte(self, data):
         if self.SPI != None:
