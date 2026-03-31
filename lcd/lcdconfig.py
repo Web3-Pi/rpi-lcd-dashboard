@@ -35,12 +35,37 @@ import logging
 import numpy as np
 from gpiozero import DigitalOutputDevice, PWMOutputDevice, DigitalInputDevice
 from gpiozero.pins.lgpio import LGPIOFactory
-factory = LGPIOFactory(chip=0)
 
+
+SPI_BUS = int(os.environ.get('SPI_BUS', 10))
+SPI_DEVICE = int(os.environ.get('SPI_DEVICE', 0))
+SPI_SPEED = int(os.environ.get('SPI_SPEED', 10000000))
+GPIO_CHIP = int(os.environ.get('GPIO_CHIP', 0))
+DIGITAL_BACKLIGHT = os.environ.get('DIGITAL_BACKLIGHT', 'true').lower() == 'true'
+
+print("Python initialized with dynamically injected HA Add-on parameters.")
+
+# Globally override gpiozero's Pi 5 chip detection bug
+Device.pin_factory = LGPIOFactory(chip=GPIO_CHIP)
 
 class RaspberryPi:
-    def __init__(self, spi=spidev.SpiDev(10, 0), spi_freq=10000000, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None,
-                 i2c_freq=100000):
+def __init__(self, spi_freq=SPI_SPEED, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None, i2c_freq=100000):
+        import RPi.GPIO as GPIO
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        
+        # 3. Apply the dynamic SPI parameters
+        self.spi = spidev.SpiDev(SPI_BUS, SPI_DEVICE)
+        self.spi.max_speed_hz = spi_freq
+        
+        # 4. Apply the Backlight patch dynamically
+        if DIGITAL_BACKLIGHT:
+            self._pwm = DigitalOutputDevice(bl)
+            self._pwm.value = 1
+        else:
+            self._pwm = PWMOutputDevice(bl, frequency=bl_freq)
+            self._pwm.value = 1.0
+
         self.np = np
         self.INPUT = False
         self.OUTPUT = True
