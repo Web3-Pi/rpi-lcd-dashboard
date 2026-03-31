@@ -434,7 +434,7 @@ def is_spi_enabled():
     Returns:
         bool: True if SPI devices are found, False otherwise.
     """
-    spi_devices = ["/dev/spidev0.0", "/dev/spidev0.1", "/dev/spidev1.0", "/dev/spidev1.1"]
+    spi_devices = ["/dev/spidev0.0", "/dev/spidev0.1", "/dev/spidev1.0", "/dev/spidev1.1", "/dev/spidev10.0"]
     for device in spi_devices:
         if os.path.exists(device):
             return True
