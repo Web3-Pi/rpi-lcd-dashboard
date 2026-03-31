@@ -35,7 +35,7 @@ import logging
 import numpy as np
 from gpiozero import DigitalOutputDevice, PWMOutputDevice, DigitalInputDevice
 from gpiozero.pins.lgpio import LGPIOFactory
-factory = LGPIOFactory()
+factory = LGPIOFactory(chip=0)
 
 
 class RaspberryPi:
