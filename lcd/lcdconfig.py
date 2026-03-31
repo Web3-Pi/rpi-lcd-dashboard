@@ -54,11 +54,12 @@ def __init__(self, spi_freq=SPI_SPEED, rst=27, dc=25, bl=18, bl_freq=1000, i2c=N
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
         
-        # 3. Apply the dynamic SPI parameters
+        # Apply the dynamic SPI parameters
         self.spi = spidev.SpiDev(SPI_BUS, SPI_DEVICE)
         self.spi.max_speed_hz = spi_freq
+        self.spi.mode = 0  # Force Mode 0 for the ST7789 chip
         
-        # 4. Apply the Backlight patch dynamically
+        # Apply the Backlight patch dynamically
         if DIGITAL_BACKLIGHT:
             self._pwm = DigitalOutputDevice(bl)
             self._pwm.value = 1
