@@ -37,7 +37,7 @@ from gpiozero import DigitalOutputDevice, PWMOutputDevice, DigitalInputDevice
 from gpiozero.pins.lgpio import LGPIOFactory
 
 
-SPI_BUS = int(os.environ.get('SPI_BUS', 10))
+SPI_BUS = int(os.environ.get('SPI_BUS', 0))
 SPI_DEVICE = int(os.environ.get('SPI_DEVICE', 0))
 SPI_SPEED = int(os.environ.get('SPI_SPEED', 10000000))
 GPIO_CHIP = int(os.environ.get('GPIO_CHIP', 0))
