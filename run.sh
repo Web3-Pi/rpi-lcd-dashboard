@@ -1,54 +1,22 @@
-#!/bin/bash
+#!/usr/bin/with-contenv bashio
 
-# Check if the script is run with sudo
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run with sudo"
-   exit 1
-fi
+# Extract user configuration from the HA Add-on UI
+export SPI_BUS=$(bashio::config 'spi_bus')
+export SPI_DEVICE=$(bashio::config 'spi_device')
+export SPI_SPEED=$(bashio::config 'spi_speed')
+export GPIO_CHIP=$(bashio::config 'gpio_chip')
+export DIGITAL_BACKLIGHT=$(bashio::config 'digital_backlight')
+export VERSION="1.1.1"
 
-echo "The script you are running has:"
-echo "basename: [$(basename "$0")]"
-echo "dirname : [$(dirname "$0")]"
-echo "pwd     : [$(pwd)]"
+bashio::log.info "========================================="
+bashio::log.info "STARTING RPI LCD DASHBOARD"
+bashio::log.info "SPI_BUS: ${SPI_BUS}"
+bashio::log.info "SPI_DEVICE: ${SPI_DEVICE}"
+bashio::log.info "SPI_SPEED: ${SPI_SPEED}"
+bashio::log.info "GPIO_CHIP: ${GPIO_CHIP}"
+bashio::log.info "DIGITAL_BACKLIGHT: ${DIGITAL_BACKLIGHT}"
+bashio::log.info "VERSION: ${VERSION}"
+bashio::log.info "========================================="
 
-DIRNAME="$(dirname "$0")"
-APPLICATION="dashboard.py"
-
-cd $DIRNAME
-
-# Check if the provided Python application file exists
-if [ ! -f "$APPLICATION" ]; then
-    echo "The specified Python application file '$APPLICATION' does not exist."
-    exit 0
-fi
-
-# Check if requirements.txt file exists
-if [ ! -f "requirements.txt" ]; then
-    echo "requirements.txt file not found in the current directory."
-    exit 0
-fi
-
-sudo apt-get -y install python3-venv python3-pip
-
-# Create a virtual environment if it does not exist
-if [ ! -d "venv" ]; then
-    echo "Creating virtual environment..."
-    python3 -m venv venv
-fi
-
-# Activate the virtual environment
-source venv/bin/activate
-
-# Install the required packages
-echo "Installing required packages..."
-pip install -r requirements.txt
-
-# Run the Python application
-echo "Running application $APPLICATION..."
-python3 $APPLICATION
-
-# Deactivate the virtual environment after finishing
-echo "Deactivate the virtual environment"
-deactivate
-
-echo 0
+cd /app
+python3 dashboard.py
