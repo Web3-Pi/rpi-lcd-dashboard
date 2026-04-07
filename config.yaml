@@ -1,0 +1,28 @@
+name: "RPi LCD Dashboard"
+description: "Drives the 1.69 inch SPI LCD dashboard."
+version: "1.1.1"
+slug: "rpi_lcd_dashboard"
+arch:
+  - aarch64
+startup: "services"
+boot: "auto"
+init: false
+devices:
+  - "/dev/spidev0.0:/dev/spidev0.0:rwm"
+  - "/dev/spidev10.0:/dev/spidev10.0:rwm"
+  - "/dev/gpiochip0:/dev/gpiochip0:rwm"
+gpio: true
+host_network: true
+host_pid: true
+options:
+  spi_bus: 0
+  spi_device: 0
+  spi_speed: 10000000
+  gpio_chip: 0
+  digital_backlight: true
+schema:
+  spi_bus: int
+  spi_device: int
+  spi_speed: int
+  gpio_chip: int
+  digital_backlight: bool
