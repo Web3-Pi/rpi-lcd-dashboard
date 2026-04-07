@@ -49,7 +49,7 @@ print("Python initialized with dynamically injected HA Add-on parameters.")
 Device.pin_factory = LGPIOFactory(chip=GPIO_CHIP)
 
 class RaspberryPi:
-def __init__(self, spi_freq=SPI_SPEED, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None, i2c_freq=100000):
+    def __init__(self, spi_freq=SPI_SPEED, rst=27, dc=25, bl=18, bl_freq=1000, i2c=None, i2c_freq=100000):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
